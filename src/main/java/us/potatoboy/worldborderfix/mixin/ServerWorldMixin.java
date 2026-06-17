@@ -12,7 +12,7 @@ public abstract class ServerWorldMixin {
     @Inject(method = "save", at = @At("HEAD"))
     private void saveBorder(CallbackInfo ci) {
         ServerWorld world = (ServerWorld) (Object) this;
-        WorldBorderState worldBorderState = world.getPersistentStateManager().getOrCreate(WorldBorderState.TYPE);
+        WorldBorderState worldBorderState = world.getPersistentStateManager().getOrCreate(WorldBorderState.TYPE, WorldBorderState.ID);
         worldBorderState.fromBorder(world.getWorldBorder());
     }
 }

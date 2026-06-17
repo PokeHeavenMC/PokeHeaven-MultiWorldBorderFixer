@@ -1,13 +1,14 @@
 package us.potatoboy.worldborderfix;
 
-import com.mojang.serialization.Codec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.datafixer.DataFixTypes;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.world.PersistentState;
-import net.minecraft.world.PersistentStateType;
 import net.minecraft.world.border.WorldBorder;
 
 public class WorldBorderState extends PersistentState {
+    public static final String ID = "worldBorder";
+
     private double centerX = WorldBorder.DEFAULT_BORDER.getCenterX();
     private double centerZ = WorldBorder.DEFAULT_BORDER.getCenterZ();
     private double size = WorldBorder.DEFAULT_BORDER.getSize();
@@ -15,34 +16,38 @@ public class WorldBorderState extends PersistentState {
     private double damagePerBlock = WorldBorder.DEFAULT_BORDER.getDamagePerBlock();
     private int warningBlocks = WorldBorder.DEFAULT_BORDER.getWarningBlocks();
     private int warningTime = WorldBorder.DEFAULT_BORDER.getWarningTime();
-    private static final Codec<WorldBorderState> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            Codec.DOUBLE.fieldOf("BorderCenterX").forGetter(WorldBorderState::getCenterX),
-            Codec.DOUBLE.fieldOf("BorderCenterZ").forGetter(WorldBorderState::getCenterZ),
-            Codec.DOUBLE.fieldOf("BorderSize").forGetter(WorldBorderState::getSize),
-            Codec.DOUBLE.fieldOf("BorderSafeZone").forGetter(WorldBorderState::getBuffer),
-            Codec.DOUBLE.fieldOf("BorderDamagePerBlock").forGetter(WorldBorderState::getDamagePerBlock),
-            Codec.INT.fieldOf("BorderWarningBlocks").forGetter(WorldBorderState::getWarningBlocks),
-            Codec.INT.fieldOf("BorderWarningTime").forGetter(WorldBorderState::getWarningTime)
-    ).apply(instance, WorldBorderState::new));
+
+    public static final PersistentState.Type<WorldBorderState> TYPE = new PersistentState.Type<>(
+        WorldBorderState::new,
+        WorldBorderState::readNbt,
+        DataFixTypes.LEVEL
+    );
 
     public WorldBorderState() {}
 
-    public WorldBorderState(double centerX, double centerZ, double size, double buffer, double damagePerBlock, int warningBlocks, int warningTime) {
-        this.centerX = centerX;
-        this.centerZ = centerZ;
-        this.size = size;
-        this.buffer = buffer;
-        this.damagePerBlock = damagePerBlock;
-        this.warningBlocks = warningBlocks;
-        this.warningTime = warningTime;
+    public static WorldBorderState readNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
+        WorldBorderState state = new WorldBorderState();
+        if (nbt.contains("BorderCenterX")) state.centerX = nbt.getDouble("BorderCenterX");
+        if (nbt.contains("BorderCenterZ")) state.centerZ = nbt.getDouble("BorderCenterZ");
+        if (nbt.contains("BorderSize")) state.size = nbt.getDouble("BorderSize");
+        if (nbt.contains("BorderSafeZone")) state.buffer = nbt.getDouble("BorderSafeZone");
+        if (nbt.contains("BorderDamagePerBlock")) state.damagePerBlock = nbt.getDouble("BorderDamagePerBlock");
+        if (nbt.contains("BorderWarningBlocks")) state.warningBlocks = nbt.getInt("BorderWarningBlocks");
+        if (nbt.contains("BorderWarningTime")) state.warningTime = nbt.getInt("BorderWarningTime");
+        return state;
     }
 
-    public static final PersistentStateType<WorldBorderState> TYPE = new PersistentStateType<>(
-        "worldBorder",
-        WorldBorderState::new,
-        WorldBorderState.CODEC,
-        DataFixTypes.LEVEL
-    );
+    @Override
+    public NbtCompound writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
+        nbt.putDouble("BorderCenterX", centerX);
+        nbt.putDouble("BorderCenterZ", centerZ);
+        nbt.putDouble("BorderSize", size);
+        nbt.putDouble("BorderSafeZone", buffer);
+        nbt.putDouble("BorderDamagePerBlock", damagePerBlock);
+        nbt.putInt("BorderWarningBlocks", warningBlocks);
+        nbt.putInt("BorderWarningTime", warningTime);
+        return nbt;
+    }
 
     public double getCenterX() {
         return centerX;
