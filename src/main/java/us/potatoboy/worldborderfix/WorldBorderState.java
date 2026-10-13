@@ -78,6 +78,15 @@ public class WorldBorderState extends PersistentState {
         return warningTime;
     }
 
+    public void applyTo(WorldBorder worldBorder) {
+        worldBorder.setCenter(centerX, centerZ);
+        worldBorder.setSize(size);
+        worldBorder.setSafeZone(buffer);
+        worldBorder.setDamagePerBlock(damagePerBlock);
+        worldBorder.setWarningBlocks(warningBlocks);
+        worldBorder.setWarningTime(warningTime);
+    }
+
     public void fromBorder(WorldBorder worldBorder) {
         centerX = worldBorder.getCenterX();
         centerZ = worldBorder.getCenterZ();

@@ -11,6 +11,9 @@ public abstract class WorldBorderMixin implements BorderWithWorld {
 	@Unique
 	private World world;
 
+	@Unique
+	private boolean loaded;
+
 	@Override
 	public World getWorld() {
 		return world;
@@ -19,5 +22,15 @@ public abstract class WorldBorderMixin implements BorderWithWorld {
 	@Override
 	public void setWorld(World world) {
 		this.world = world;
+	}
+
+	@Override
+	public boolean isLoaded() {
+		return loaded;
+	}
+
+	@Override
+	public void setLoaded(boolean loaded) {
+		this.loaded = loaded;
 	}
 }

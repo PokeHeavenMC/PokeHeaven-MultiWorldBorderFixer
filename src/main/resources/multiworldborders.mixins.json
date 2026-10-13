@@ -3,7 +3,9 @@
   "package": "us.potatoboy.worldborderfix.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
+    "EnderPearlEntityMixin",
     "MinecraftServerMixin",
+    "PersistentStateManagerAccessor",
     "PlayerManagerMixin",
     "ServerWorldMixin",
     "WorldBorderCenterChangePacketMixin",

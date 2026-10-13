@@ -14,33 +14,40 @@ public class PerWorldBorderListener implements net.minecraft.world.border.WorldB
     @Override
     public void onSizeChange(WorldBorder border, double size) {
         world.getPlayers().forEach(playerEntity -> playerEntity.networkHandler.sendPacket((new WorldBorderSizeChangedS2CPacket(border))));
+        MultiWorldBorder.saveBorder(world);
     }
 
     @Override
     public void onInterpolateSize(WorldBorder border, double fromSize, double toSize, long time) {
         world.getPlayers().forEach(playerEntity -> playerEntity.networkHandler.sendPacket((new WorldBorderInitializeS2CPacket(border))));
+        MultiWorldBorder.saveBorder(world);
     }
 
     @Override
     public void onCenterChanged(WorldBorder border, double centerX, double centerZ) {
         world.getPlayers().forEach(playerEntity -> playerEntity.networkHandler.sendPacket((new WorldBorderCenterChangedS2CPacket(border))));
+        MultiWorldBorder.saveBorder(world);
     }
 
     @Override
     public void onWarningTimeChanged(WorldBorder border, int warningTime) {
         world.getPlayers().forEach(playerEntity -> playerEntity.networkHandler.sendPacket((new WorldBorderWarningTimeChangedS2CPacket(border))));
+        MultiWorldBorder.saveBorder(world);
     }
 
     @Override
     public void onWarningBlocksChanged(WorldBorder border, int warningBlockDistance) {
         world.getPlayers().forEach(playerEntity -> playerEntity.networkHandler.sendPacket((new WorldBorderWarningBlocksChangedS2CPacket(border))));
+        MultiWorldBorder.saveBorder(world);
     }
 
     @Override
     public void onDamagePerBlockChanged(WorldBorder border, double damagePerBlock) {
+        MultiWorldBorder.saveBorder(world);
     }
 
     @Override
     public void onSafeZoneChanged(WorldBorder border, double safeZoneRadius) {
+        MultiWorldBorder.saveBorder(world);
     }
 }
